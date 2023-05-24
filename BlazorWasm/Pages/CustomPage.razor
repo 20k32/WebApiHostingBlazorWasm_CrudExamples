@@ -1,0 +1,86 @@
+﻿@page "/CustomPage"
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+@using Models;
+
+@inject HttpClient Http;
+
+<h2>Add new employee:</h2>
+<div>
+    <p>
+        Name:<br />
+        <input @bind-value="CurrentPerson.Name" />
+    </p>
+    <p>
+        Age:<br />
+        <input type="number" @bind-value="CurrentPerson.Age" />
+    </p>
+    <p>
+        <button class="btn btn-primary btn-lg" @onclick="Submit">Save</button>
+    </p>
+</div>
+<h2>List of Employees:</h2>
+<table class="table" style="width:400px">
+    <thead><tr><th>Name</th><th>Age</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var person in Employees)
+        {
+            <tr>
+                <td>@person.Name</td>
+                <td>@person.Age</td>
+                <td>
+                    <button class="btn-warning btn-sm" @onclick="()=>Edit(person)">Change</button>
+                    <button class="btn-danger btn-sm" @onclick="@(async ()=> await Delete(person.Id))">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    List<Person> Employees = new();
+    Person CurrentPerson = new();
+
+    protected override async Task OnInitializedAsync() => await LoadData();
+
+    async Task LoadData()
+    {
+        Employees = await Http.GetFromJsonAsync<List<Person>>("/api/EmployeesList/GetEmployeesList") ?? Employees;
+    }
+
+    void Edit(Person PerviousPersonData)
+    {
+        CurrentPerson.Id = PerviousPersonData.Id;
+        CurrentPerson.Name = PerviousPersonData.Name;
+        CurrentPerson.Age = PerviousPersonData.Age;
+    }
+
+    async Task Submit()
+    {
+
+        if (string.IsNullOrWhiteSpace(CurrentPerson.Id))
+        {
+            await Http.PostAsJsonAsync("/api/EmployeesList/AddEmployee", CurrentPerson);
+        }
+        else
+        {
+            await Http.PutAsJsonAsync("/api/EmployeesList/UpdateData", CurrentPerson);
+            CurrentPerson.Id = string.Empty;
+        }
+
+        await LoadData();
+    }
+
+    async Task Delete(string id)
+    {
+        var response = await Http.DeleteAsync($"/api/EmployeesList/DeleteEmployee/{id}");
+
+        if(CurrentPerson.Id == id)
+        {
+            CurrentPerson.Id = string.Empty;
+        }
+
+        await LoadData();
+    }
+}
