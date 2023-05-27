@@ -5,7 +5,7 @@ namespace AspHost.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EmployeesListController : ControllerBase
+    public class EmployeesList : ControllerBase
     {
         private static List<Person> Data = new()
         {

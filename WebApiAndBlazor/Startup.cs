@@ -5,9 +5,16 @@ namespace WebApiAndBlazor
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            // to use session:
+            services.AddMemoryCache();
+            services.AddSession();
+            //---
+            services.AddControllers()
+                // to use tempdata on server:
+                .AddSessionStateTempDataProvider();
+                //---
             services.AddEndpointsApiExplorer();
-            //services.AddSwaggerGen();
+            services.AddSwaggerGen();
             services.AddCors();
             services.AddRazorPages();
 
@@ -22,9 +29,10 @@ namespace WebApiAndBlazor
             // Configure the HTTP request pipeline.
             if (env.IsDevelopment())
             {
-                /*app.UseSwagger();
-                app.UseSwaggerUI();*/
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
+
             app.UseCors(config => config.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
@@ -32,7 +40,11 @@ namespace WebApiAndBlazor
             app.UseRouting();
 
             app.UseBlazorFrameworkFiles();
-            
+
+            //to use session:
+            app.UseSession();
+            //---
+
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();

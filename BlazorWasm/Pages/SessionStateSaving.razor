@@ -1,0 +1,31 @@
+﻿@page "/SessionStateSaving"
+
+@inject HttpClient Http;
+
+<h1>
+    SavedVariable: @Variable
+</h1>
+
+
+<button class="btn btn-primary btn-lg" @onclick="@OnGetVariableButtonClick">Get saved variable</button>
+
+<div>
+    <input type="text" @bind-value="InputData" />
+    <button class="btn btn-primary btn-lg" @onclick="OnPostButtonClick">Submit Data</button>
+</div>
+
+@code {
+    string Variable = null!;
+    string InputData = null!;
+
+    public async Task OnPostButtonClick()
+    {
+        await Http.PostAsJsonAsync<PostModel>("api/sessionsample/postdata", new() { Data = InputData ?? string.Empty });
+    }
+
+    public async Task OnGetVariableButtonClick()
+    {
+        var result = await Http.GetAsync("api/sessionsample/getdata");
+        Variable = await result.Content.ReadAsStringAsync();
+    }
+}

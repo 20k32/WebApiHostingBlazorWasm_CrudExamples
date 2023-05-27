@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspHost", "WebApiAndBlazor\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasm", "BlazorWasm\BlazorWasm.csproj", "{1A691E18-37EC-46F8-A99A-4F5251C41687}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{18A60D6A-61C0-459E-89A0-B1F32BE5330B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{18A60D6A-61C0-459E-89A0-B1F32BE5330B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
